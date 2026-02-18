@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Personal To-Do List</title>
+    <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+    <script src="{{ url_for('static', filename='script.js') }}" defer></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Personal To-Do List</h1>
+        <p>Pending tasks: {{ pending_count }}</p>
+
+        <!-- Dark/Light Mode Toggle -->
+        <div class="toggle-container">
+            <label class="switch">
+                <input type="checkbox" id="toggle-theme">
+                <span class="slider round"></span>
+            </label>
+            <span id="mode-label">Light Mode</span>
+        </div>
+
+        <!-- Add Task -->
+        <form method="POST">
+            <input type="text" name="task" placeholder="Add new task" required>
+            <button type="submit">Add</button>
+        </form>
+
+        <!-- Sorting Options -->
+        <div class="sorting">
+            Sort by: 
+            <a href="{{ url_for('index', sort='pending') }}" {% if sort_option=='pending' %}class="active"{% endif %}>Pending</a> |
+            <a href="{{ url_for('index', sort='alpha') }}" {% if sort_option=='alpha' %}class="active"{% endif %}>Alphabetical</a> |
+            <a href="{{ url_for('index', sort='newest') }}" {% if sort_option=='newest' %}class="active"{% endif %}>Newest</a>
+        </div>
+
+        <!-- Task List -->
+        <ul>
+            {% for t in tasks %}
+            <li class="{{ 'done' if t.done else '' }}">
+                {{ t.task }}
+                <div class="actions">
+                    <a href="{{ url_for('done', task_id=t.index) }}">✔</a>
+                    <a href="{{ url_for('delete', task_id=t.index) }}">✖</a>
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+    </div>
+</body>
+</html>
